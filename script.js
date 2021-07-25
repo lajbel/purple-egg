@@ -114,20 +114,20 @@ scene("main", () => {
 		if(theEgg.dragged) {
 			win = true;
 			music.stop()
-		}
+		};
 
 		if(win == true && !theEgg.dragged) {
-			var isPosted = false;
+			const newScore = Number(timer.time.toFixed(2).toString().replace(".", ""));
 
-			const newScore = Number(timer.time.toFixed(2).toString().replace(".", ""))
 			if(!isPosted) {
-				Newgrounds.PostScore(0, newScore);
-				Newgrounds.UnlockMedal(0);
-
 				isPosted = true;
+
+				Newgrounds.PostScore(0, newScore);
+				Newgrounds.UnlockMedal(0);		
 			}
+
 			wait(0.4, () => go("main"))
-		}
+		};
 	});
 
 	// Input
