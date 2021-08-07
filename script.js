@@ -1,4 +1,4 @@
-import drag from "./drag.js";
+import drag from "./components/drag.js";
 
 Newgrounds.Init("fun", "raid");
 
@@ -6,7 +6,7 @@ var k = kaboom({
 	global: true,
 	width: 600,
 	height: 600,
-	debug: true,
+	debug: false,
 	canvas: document.getElementById("game"),
 	clearColor: [0, 0, 0, 1]
 });
@@ -14,11 +14,11 @@ var k = kaboom({
 // Load assets 
 
 var eggs = ["madness", "omni", "ahegao", "creeper", "roblox", "xd", "papa", "alien", "sad", "joy", "furry", "angry", "steve", "pacman", "sus", "think", "chapo", "flushed", "synj", "boyfriend", "clasic", "uwu", "woman", "nerd", "stupid"]
-eggs.map(e => loadSprite(e, `./assets/sprites/${e}.png`))
+eggs.map(e => loadSprite(e, `./sprites/${e}.png`))
 
-loadSprite("background", "./assets/sprites/background.png");
-loadSound("music", "./assets/music.ogg");
-loadSprite("newgrounds", "./assets/sprites/newgrounds.png");
+loadSprite("background", "./sprites/background.png");
+loadSound("music", "./sounds/music.ogg");
+loadSprite("newgrounds", "./sprites/newgrounds.png");
 
 // SplashScreens
 
@@ -45,7 +45,7 @@ scene("splash", async () => {
 
 		ng.color.a -= 0.01;
 
-		if(ng.color.a <= 0) wait(0.1, () => go("main"));
+		if(ng.color.a <= 0) wait(0.8, () => go("main"));
 	});
 });
 

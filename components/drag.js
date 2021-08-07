@@ -1,4 +1,4 @@
-import k from "./script.js";
+import k from "../script.js";
 
 function drag() {
 	var offset = vec2(0);
