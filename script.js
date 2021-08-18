@@ -1,8 +1,14 @@
+// Import component
+
 import drag from "./components/drag.js";
 
-Newgrounds.Init("fun", "raid");
+// Init apis
 
-var k = kaboom({
+Newgrounds.Init("fun", "raid");
+GJAPI.iGameID = 634145;
+GJAPI.sGameKey = "random";
+
+const k = kaboom({
 	global: true,
 	width: 600,
 	height: 600,
@@ -13,7 +19,7 @@ var k = kaboom({
 
 // Load assets 
 
-var eggs = ["madness", "omni", "ahegao", "creeper", "roblox", "xd", "papa", "alien", "sad", "joy", "furry", "angry", "steve", "pacman", "sus", "think", "chapo", "flushed", "synj", "boyfriend", "clasic", "uwu", "woman", "nerd", "stupid"]
+const eggs = ["madness", "omni", "ahegao", "creeper", "roblox", "xd", "papa", "alien", "sad", "joy", "furry", "angry", "steve", "pacman", "sus", "think", "chapo", "flushed", "synj", "boyfriend", "clasic", "uwu", "woman", "nerd", "stupid"]
 eggs.map(e => loadSprite(e, `./sprites/${e}.png`))
 
 loadSprite("background", "./sprites/background.png");
@@ -56,7 +62,6 @@ scene("main", () => {
 	var theEgg;
 	var isPosted = false;
 	var win;
-
 
 	layers(["background", "game", "ui"]);
 	
@@ -118,12 +123,16 @@ scene("main", () => {
 
 		if(win == true && !theEgg.dragged) {
 			const newScore = Number(timer.time.toFixed(2).toString().replace(".", ""));
+			const gjScore = timer.time.toFixed(2).toString().replace(".", ":");
 
 			if(!isPosted) {
 				isPosted = true;
 
 				Newgrounds.PostScore(0, newScore);
-				Newgrounds.UnlockMedal(0);		
+				Newgrounds.UnlockMedal(0);
+
+				GJAPI.TrophyAchieve(146751);
+				GJAPI.ScoreAdd(642348, timer.time.toFixed(2), gjScore + "'");		
 			}
 
 			wait(0.4, () => go("main"))
