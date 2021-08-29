@@ -1,20 +1,18 @@
-// Import component
+// Import components
 
 import drag from "./components/drag.js";
 
-// Init apis
-
-Newgrounds.Init("fun", "raid");
-GJAPI.iGameID = 634145;
-GJAPI.sGameKey = "random";
+// Game
 
 const k = kaboom({
 	global: true,
 	width: 600,
 	height: 600,
 	debug: false,
+    letterbox: true,
 	canvas: document.getElementById("game"),
-	clearColor: [0, 0, 0, 1]
+	clearColor: [0, 0, 0, 1],
+    curDraggin: null
 });
 
 // Load assets 
@@ -56,12 +54,9 @@ scene("splash", async () => {
 });
 
 scene("main", () => {
-	var sdata = sceneData();
-	sdata.curDraggin = null;
-	
-	var theEgg;
-	var isPosted = false;
-	var win;
+    const eggsForSpawn = 100;
+	let purpleEgg;
+	let hasWin;
 
 	layers(["background", "game", "ui"]);
 	
@@ -75,18 +70,19 @@ scene("main", () => {
 		sprite("background"),	
 		pos(0, 0),
 		layer("background")
-	])
+	]);
 
 	const music = play("music");
 	music.loop();
 	music.volume(0.5);
 
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < eggsForSpawn; i++) {
 		var egg = add([
 			sprite(choose(eggs)),
 			pos(rand(width()), rand(height())),
 			scale(7),
 			origin("center"),
+            area(),
 			drag(),
 			layer("game"),
 			i !== 0 ? color(1, 1, 1) : color(1, 0, 1),
@@ -95,7 +91,7 @@ scene("main", () => {
 			}
 		]);
 
-		if(i == 0) theEgg = egg;
+		if(i == 0) purpleEgg = egg;
 	}
 
 	const timer = add([
@@ -109,46 +105,32 @@ scene("main", () => {
 	]);
 
 	timer.action(() => {
-		if(win == true) return;
+		if(hasWin == true) return;
 
 		timer.time += dt();
 		timer.text = timer.time.toFixed(2);
 	});
 
-	theEgg.action(() => {
-		if(theEgg.dragged) {
-			win = true;
+	purpleEgg.action(() => {
+		if(purpleEgg.dragged) {
+			hasWin = true;
 			music.stop()
 		};
 
-		if(win == true && !theEgg.dragged) {
-			const newScore = Number(timer.time.toFixed(2).toString().replace(".", ""));
-			const gjScore = timer.time.toFixed(2).toString().replace(".", ":");
-
-			if(!isPosted) {
-				isPosted = true;
-
-				Newgrounds.PostScore(0, newScore);
-				Newgrounds.UnlockMedal(0);
-
-				GJAPI.TrophyAchieve(146751);
-				GJAPI.ScoreAdd(642348, timer.time.toFixed(2), gjScore + "'");		
-			}
-
+		if(hasWin == true && !purpleEgg.dragged) {
+			// const newgroundsScore = Number(timer.time.toFixed(2).toString().replace(".", ""));
+			// const gamejoltScore = timer.time.toFixed(2).toString().replace(".", ":");
+			
+            music.stop();
 			wait(0.4, () => go("main"))
 		};
 	});
 
 	// Input
 
-	action(() => {
-		if(mouseIsReleased()) {
-			sdata.curDraggin = null;
-		};
-	});
-
+    mouseRelease(() => k.curDraggin = null);
 });
 
-start("splash");
+go("main");
 
 export default k;

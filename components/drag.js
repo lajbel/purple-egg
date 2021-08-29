@@ -1,31 +1,30 @@
 import k from "../script.js";
 
 function drag() {
-	var offset = vec2(0);
-	var sdata = sceneData();
+	let offset = vec2(0);
 
 	return {
 		id: "drag",
 		require: [ "pos", "area", ],
 		add() {
 			this.clicks(() => {
-				if (sdata.curDraggin) {
-					return;
-				}
-				sdata.curDraggin = this;
+				if(k.curDraggin) return;
+                this.dragged = true;
+				k.curDraggin = this;
 				offset = mousePos().sub(this.pos);
 				readd(this);
 			});
 		},
 		update() {
-			if (sdata.curDraggin === this) {
-				this.dragged = true;
+			if (k.curDraggin === this) {
 				this.pos = mousePos().sub(offset);
-			} else {
-				this.dragged = false;
 			}
+            else {
+                this.dragged = false;
+            }
 		},
 	};
-};
+
+}
 
 export default drag;
