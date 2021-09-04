@@ -127,7 +127,6 @@ scene("game", () => {
 		if(hasWin == true && !purpleEgg.dragged) {
             ngPostScore(10455, Number(timer.time.toFixed(2).toString().replace(".", "")));
 			
-            music.stop();
 			wait(0.4, () => go("game"));
 		};
 	});
