@@ -38,7 +38,7 @@ scene("splash", async () => {
 		sprite("newgrounds"),
 		origin("center"),
 		color(rgba(255, 255, 255, 0)),
-		scale(1.5),
+		scale(1),
 		pos(width() / 2, height() / 2)
 	]);
 
@@ -46,7 +46,7 @@ scene("splash", async () => {
         if(time() > splashTime + 0.01 && !show) {
             splashTime = time();
             if(ng.color.a < 1) ng.color.a += 0.01;
-            else wait(1, () => show = true);
+            else wait(2, () => show = true);
         }
         else {
             if(ng.color.a > 0) ng.color.a -= 0.01;
