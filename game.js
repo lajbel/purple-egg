@@ -1,19 +1,23 @@
-// Import components
+// Import components and plugins
 
-import drag from "./components/drag.js";
+import { newgroundsPlugin } from "./plugins/newgrounds.js";
+import { drag } from "./plugins/components/drag.js";
 
-// Game
+// Init game config
 
 const k = kaboom({
-	global: true,
 	width: 600,
 	height: 600,
-	debug: false,
-    letterbox: true,
-	canvas: document.getElementById("game"),
+    touchToMouse: true,
 	clearColor: [0, 0, 0, 1],
-    curDraggin: null
+    font: "sinko",
+    curDraggin: null,
+    plugins: [ newgroundsPlugin ]
 });
+
+// Connect api
+
+ngInit("", "");
 
 // Load assets 
 
@@ -24,36 +28,38 @@ loadSprite("background", "./sprites/background.png");
 loadSound("music", "./sounds/music.ogg");
 loadSprite("newgrounds", "./sprites/newgrounds.png");
 
-// SplashScreens
+// Splash Screen
 
 scene("splash", async () => {
-	var show = false; 
+	let show = false;
+    let splashTime = 0; 
 
 	const ng = add([
 		sprite("newgrounds"),
 		origin("center"),
-		color(1, 1, 1, 0),
+		color(rgba(255, 255, 255, 0)),
 		scale(1.5),
 		pos(width() / 2, height() / 2)
 	]);
 
-	loop(0.01, () => {
-		if(show) return;
+    ng.action(() => {
+        if(time() > splashTime + 0.01 && !show) {
+            splashTime = time();
+            if(ng.color.a < 1) ng.color.a += 0.01;
+            else wait(1, () => show = true);
+        }
+        else {
+            if(ng.color.a > 0) ng.color.a -= 0.01;
+            else wait(1, () => go("game"));
+        };
 
-		if(ng.color.a >= 1) wait(1, () => show = true)
-		else ng.color.a += 0.01;
-	});
-
-	loop(0.01, () => {
-		if(!show) return;
-
-		ng.color.a -= 0.01;
-
-		if(ng.color.a <= 0) wait(0.8, () => go("main"));
-	});
+        if(keyIsPressed() || mouseIsClicked()) {
+            go("game");
+        };
+    });
 });
 
-scene("main", () => {
+scene("game", () => {
     const eggsForSpawn = 100;
 	let purpleEgg;
 	let hasWin;
@@ -62,7 +68,7 @@ scene("main", () => {
 	
 	add([
 		rect(width(), height()),
-		color(rgba(1, 0, 1, 1)),
+		color(rgb(255, 0, 255)),
 		pos(0, 0)
 	]);
 
@@ -77,7 +83,7 @@ scene("main", () => {
 	music.volume(0.5);
 
 	for (let i = 0; i < eggsForSpawn; i++) {
-		var egg = add([
+		let egg = add([
 			sprite(choose(eggs)),
 			pos(rand(width()), rand(height())),
 			scale(7),
@@ -85,7 +91,7 @@ scene("main", () => {
             area(),
 			drag(),
 			layer("game"),
-			i !== 0 ? color(1, 1, 1) : color(1, 0, 1),
+			i !== 0 ? color(rgb(255, 255, 255)) : color(rgb(255, 0, 255)),
 			{
 				dragged: false
 			}
@@ -95,9 +101,9 @@ scene("main", () => {
 	}
 
 	const timer = add([
-		text(0, 30),
-		color(rgb(136, 255, 0)),
-		pos(2, 10),
+		text(0, {size: 50}),
+		color(rgb(229, 207, 64)),
+		pos(15, 15),
 		layer("ui"),
 		{
 			time: 0,
@@ -108,29 +114,37 @@ scene("main", () => {
 		if(hasWin == true) return;
 
 		timer.time += dt();
-		timer.text = timer.time.toFixed(2);
+		timer.text = timer.time.toFixed(2).toString().replace(".", ":");
 	});
 
 	purpleEgg.action(() => {
 		if(purpleEgg.dragged) {
 			hasWin = true;
-			music.stop()
+            ngUnlockMedal(63941);
+			music.stop();
 		};
 
 		if(hasWin == true && !purpleEgg.dragged) {
-			// const newgroundsScore = Number(timer.time.toFixed(2).toString().replace(".", ""));
-			// const gamejoltScore = timer.time.toFixed(2).toString().replace(".", ":");
+            ngPostScore(10455, Number(timer.time.toFixed(2).toString().replace(".", "")));
 			
             music.stop();
-			wait(0.4, () => go("main"))
+			wait(0.4, () => go("game"));
 		};
 	});
 
 	// Input
 
-    mouseRelease(() => k.curDraggin = null);
+    action(() => {
+        if(mouseIsReleased()) {
+            k.curDraggin = null
+        };
+
+        if(keyIsPressed("f")) {
+            fullscreen(!fullscreen());
+        };
+    });
 });
 
-go("main");
+go("splash");
 
-export default k;
+export { k };

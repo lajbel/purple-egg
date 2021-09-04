@@ -1,4 +1,4 @@
-import k from "../script.js";
+import { k } from "../../game.js";
 
 function drag() {
 	let offset = vec2(0);
@@ -10,8 +10,10 @@ function drag() {
 			this.clicks(() => {
 				if(k.curDraggin) return;
                 this.dragged = true;
+
 				k.curDraggin = this;
 				offset = mousePos().sub(this.pos);
+
 				readd(this);
 			});
 		},
@@ -27,4 +29,4 @@ function drag() {
 
 }
 
-export default drag;
+export { drag };
