@@ -18,8 +18,19 @@ export const k = kaboom({
 
 // Load Assets and Newgrounds ////////////////////////////////////////////////////////////
 
-const eggs = ["mark", "madness", "omni", "ahegao", "creeper", "roblox", "xd", "papa", "alien", "sad", "joy", "furry", "angry", "steve", "pacman", "sus", "think", "chapo", "flushed", "synj", "boyfriend", "clasic", "uwu", "woman", "nerd", "stupid"]
-eggs.map(e => loadSprite(e, `./sprites/${e}.png`))
+const eggs = [
+    "mark", "madness", "omni", 
+    "ahegao", "creeper", "roblox", 
+    "xd", "papa", "alien", 
+    "sad", "joy", "furry", 
+    "angry", "steve", "pacman", 
+    "sus", "think", "chapo", 
+    "flushed", "synj", "boyfriend", 
+    "clasic", "uwu", "woman", 
+    "nerd", "stupid"
+];
+
+eggs.map(e => loadSprite(e, `./sprites/${e}.png`));
 
 loadSprite("background", "./sprites/background.png");
 loadSound("music", "./sounds/music.ogg");
