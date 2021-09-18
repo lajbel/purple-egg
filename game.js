@@ -1,25 +1,22 @@
-// Import components and plugins
+// Import components and plugins /////////////////////////////////////////////////////////
 
 import { newgroundsPlugin } from "./plugins/newgrounds.js";
 import { drag } from "./plugins/components/drag.js";
 
-// Init game config
+// Kaboom ////////////////////////////////////////////////////////////////////////////////
 
-const k = kaboom({
+export const k = kaboom({
 	width: 600,
 	height: 600,
+    letterbox: true,
     touchToMouse: true,
-	clearColor: [0, 0, 0, 1],
     font: "sinko",
     curDraggin: null,
+    clearColor: [0, 0, 0, 1],
     plugins: [ newgroundsPlugin ]
 });
 
-// Connect api
-
-ngInit("", "");
-
-// Load assets 
+// Load Assets and Newgrounds ////////////////////////////////////////////////////////////
 
 const eggs = ["mark", "madness", "omni", "ahegao", "creeper", "roblox", "xd", "papa", "alien", "sad", "joy", "furry", "angry", "steve", "pacman", "sus", "think", "chapo", "flushed", "synj", "boyfriend", "clasic", "uwu", "woman", "nerd", "stupid"]
 eggs.map(e => loadSprite(e, `./sprites/${e}.png`))
@@ -28,7 +25,11 @@ loadSprite("background", "./sprites/background.png");
 loadSound("music", "./sounds/music.ogg");
 loadSprite("newgrounds", "./sprites/newgrounds.png");
 
-// Splash Screen
+ngInit("", "");
+
+// Scenes ////////////////////////////////////////////////////////////////////////////////
+
+// Splash Scene ////////////////////////////////
 
 scene("splash", async () => {
 	let show = false;
@@ -58,6 +59,8 @@ scene("splash", async () => {
         };
     });
 });
+
+// Game Scene //////////////////////////////////
 
 scene("game", () => {
     const eggsForSpawn = 100;
@@ -144,6 +147,7 @@ scene("game", () => {
     });
 });
 
+// Start Scene ///////////////////////////////////////////////////////////////////////////
+
 go("splash");
 
-export { k };
