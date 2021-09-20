@@ -86,6 +86,8 @@ scene("game", (tmode) => {
 
     const music = play("music", { loop: true, volume: 0.5 });
 
+    if(tmode) music.speed(1.2);
+
     // Characters and gui 
 
     add([ sprite("background") ]);
