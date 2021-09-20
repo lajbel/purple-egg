@@ -8,15 +8,14 @@ import { drag } from "./plugins/components/drag.js";
 export const k = kaboom({
     width: 600,
     height: 600,
-    letterbox: true,
-    touchToMouse: true,
+    stretch: false,
     font: "sinko",
     curDraggin: null,
-    clearColor: [0, 0, 0, 1],
+    clearColor: [255, 0, 255],
     plugins: [newgroundsPlugin]
 });
 
-// Load Assets and Newgrounds ////////////////////////////////////////////////////////////
+// Load Assets and Newgrounds Init ///////////////////////////////////////////////////////
 
 const eggs = [
     "mark", "madness", "omni",
@@ -27,7 +26,8 @@ const eggs = [
     "sus", "think", "chapo",
     "flushed", "synj", "boyfriend",
     "clasic", "uwu", "woman",
-    "nerd", "stupid"
+    "nerd", "stupid", "stepford",
+    "slick"
 ];
 
 eggs.map(e => loadSprite(e, `./sprites/${e}.png`));
@@ -39,8 +39,6 @@ loadSprite("newgrounds", "./sprites/newgrounds.png");
 ngInit("", "");
 
 // Scenes ////////////////////////////////////////////////////////////////////////////////
-
-// Splash Scene ////////////////////////////////
 
 scene("splash", async () => {
     let show = false;
@@ -64,39 +62,35 @@ scene("splash", async () => {
             if (ng.color.a > 0) ng.color.a -= 0.01;
             else wait(1, () => go("game"));
         };
+    });
 
-        if (keyIsPressed() || mouseIsClicked()) {
-            go("game");
+    action(() => {
+        if (keyIsPressed("enter") || keyIsPressed("space")) {
+            go("game", false);
+        };
+
+        if(keyIsPressed("t")) {
+            go("game", true)
         };
     });
 });
 
-// Game Scene //////////////////////////////////
+scene("game", (tmode) => {
+    // Vars and config
 
-scene("game", () => {
-    const eggsForSpawn = 100;
+    layers(["game", "ui"]);
+
+    let eggsForSpwan = tmode ? 200 : 100;
     let purpleEgg;
-    let hasWin;
+    let win;
 
-    layers(["background", "game", "ui"]);
+    const music = play("music", { loop: true, volume: 0.5 });
 
-    add([
-        rect(width(), height()),
-        color(rgb(255, 0, 255)),
-        pos(0, 0)
-    ]);
+    // Characters and gui 
 
-    add([
-        sprite("background"),
-        pos(0, 0),
-        layer("background")
-    ]);
+    add([ sprite("background") ]);
 
-    const music = play("music");
-    music.loop();
-    music.volume(0.5);
-
-    for (let i = 0; i < eggsForSpawn; i++) {
+    for (let i = 0; i < eggsForSpwan; i++) {
         let egg = add([
             sprite(choose(eggs)),
             pos(rand(width()), rand(height())),
@@ -106,6 +100,7 @@ scene("game", () => {
             drag(),
             layer("game"),
             i !== 0 ? color(rgb(255, 255, 255)) : color(rgb(255, 0, 255)),
+            "egg",
             {
                 dragged: false
             }
@@ -124,8 +119,14 @@ scene("game", () => {
         },
     ]);
 
+    // Events
+
+    hovers("egg", () => {
+        cursor("pointer");
+    });
+
     timer.action(() => {
-        if (hasWin == true) return;
+        if (win == true) return;
 
         timer.time += dt();
         timer.text = timer.time.toFixed(2).toString().replace(".", ":");
@@ -133,17 +134,50 @@ scene("game", () => {
 
     purpleEgg.action(() => {
         if (purpleEgg.dragged) {
-            hasWin = true;
+            win = true;
+
             ngUnlockMedal(63941);
             music.stop();
+
+            if (purpleEgg.sprite == "clasic") ngUnlockMedal(65362);
+            else if (purpleEgg.sprite == "alien") ngUnlockMedal(65358);
+            else if (purpleEgg.sprite == "angry") ngUnlockMedal(65359);
+            else if (purpleEgg.sprite == "ahegao") ngUnlockMedal(65357);
+            else if (purpleEgg.sprite == "boyfriend") ngUnlockMedal(65360);
+            else if (purpleEgg.sprite == "chapo") ngUnlockMedal(65361);
+            else if (purpleEgg.sprite == "flushed") ngUnlockMedal(65364);
+            else if (purpleEgg.sprite == "creeper") ngUnlockMedal(65363);
+            else if (purpleEgg.sprite == "furry") ngUnlockMedal(65365);
+            else if (purpleEgg.sprite == "joy") ngUnlockMedal(65366);
+            else if (purpleEgg.sprite == "madness") ngUnlockMedal(65367);
+            else if (purpleEgg.sprite == "nerd") ngUnlockMedal(65368);
+            else if (purpleEgg.sprite == "omni") ngUnlockMedal(65369);
+            else if (purpleEgg.sprite == "pacman") ngUnlockMedal(65370);
+            else if (purpleEgg.sprite == "papa") ngUnlockMedal(65371);
+            else if (purpleEgg.sprite == "roblox") ngUnlockMedal(65372);
+            else if (purpleEgg.sprite == "sad") ngUnlockMedal(65373);
+            else if (purpleEgg.sprite == "slick") ngUnlockMedal(65383);
+            else if (purpleEgg.sprite == "steve") ngUnlockMedal(65374);
+            else if (purpleEgg.sprite == "stupid") ngUnlockMedal(65375);
+            else if (purpleEgg.sprite == "sus") ngUnlockMedal(65376);
+            else if (purpleEgg.sprite == "woman") ngUnlockMedal(65380);
+            else if (purpleEgg.sprite == "xd") ngUnlockMedal(65381);
+            else if (purpleEgg.sprite == "stepford") ngUnlockMedal(65382);
+            else if (purpleEgg.sprite == "synj") ngUnlockMedal(65377);
+            else if (purpleEgg.sprite == "think") ngUnlockMedal(65378);
+            else if (purpleEgg.sprite == "mark") ngUnlockMedal(65384);
+            else if (purpleEgg.sprite == "uwu") ngUnlockMedal(65379);
         };
 
-        if (hasWin == true && !purpleEgg.dragged) {
-            ngPostScore(10455, Number(timer.time.toFixed(2).toString().replace(".", "")));
+        if (win == true && !purpleEgg.dragged) {
+            if(tmode) ngPostScore(10820, Number(timer.time.toFixed(2).toString().replace(".", "")));
+            else ngPostScore(10455, Number(timer.time.toFixed(2).toString().replace(".", "")));
 
-            wait(0.4, () => go("game"));
+            wait(0.8, () => go("game"));
         };
     });
+
+    // Input
 
     action(() => {
         if (mouseIsReleased()) {
@@ -153,10 +187,19 @@ scene("game", () => {
         if (keyIsPressed("f")) {
             fullscreen(!fullscreen());
         };
+
+        if (keyIsPressed("r")) {
+            music.stop();
+            go("game", false);
+        };
+
+        if (keyIsPressed("escape")) {
+            music.stop();
+            go("splash");
+        };
     });
 });
 
 // Start Scene ///////////////////////////////////////////////////////////////////////////
 
 go("splash");
-

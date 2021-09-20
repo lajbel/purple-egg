@@ -4,7 +4,6 @@
 }
 
 body {
-    height: 100vh;
 	background-color: rgb(27, 27, 27);
 	display: flex;
 	justify-content: center;
