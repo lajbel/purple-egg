@@ -27,7 +27,7 @@ const eggs = [
     "flushed", "synj", "boyfriend",
     "clasic", "uwu", "woman",
     "nerd", "stupid", "stepford",
-    "slick"
+    "slick", "hank", "b"
 ];
 
 eggs.map(e => loadSprite(e, `./sprites/${e}.png`));
@@ -173,6 +173,8 @@ scene("game", (tmode) => {
             else if (purpleEgg.is("think")) ngUnlockMedal(65378);
             else if (purpleEgg.is("mark")) ngUnlockMedal(65384);
             else if (purpleEgg.is("uwu")) ngUnlockMedal(65379);
+            else if (purpleEgg.is("hank")) ngUnlockMedal(65421);
+            else if (purpleEgg.is("b")) ngUnlockMedal(65422);
         };
 
         if (win == true && !purpleEgg.dragged) {
