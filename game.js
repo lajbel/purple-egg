@@ -36,7 +36,7 @@ loadSprite("background", "./sprites/background.png");
 loadSound("music", "./sounds/music.ogg");
 loadSprite("newgrounds", "./sprites/newgrounds.png");
 
-ngInit("", "");
+ngInit("noraid", "xd");
 
 // Scenes ////////////////////////////////////////////////////////////////////////////////
 
@@ -142,8 +142,6 @@ scene("game", (tmode) => {
 
             ngUnlockMedal(63941);
             music.stop();
-
-            console.log(purpleEgg);
 
             if (purpleEgg.is("clasic")) ngUnlockMedal(65362);
             else if (purpleEgg.is("alien")) ngUnlockMedal(65358);
