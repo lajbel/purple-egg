@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "esbuild --bundle src/main.ts --sourcemap --outfile=www/game.js --servedir=www"
+  },
+  "dependencies": {
+    "kaboom": "github:replit/kaboom"
+  },
+  "devDependencies": {
+    "dprint": "^0.45.1",
+    "esbuild": "^0.20.2"
+  }
+}
